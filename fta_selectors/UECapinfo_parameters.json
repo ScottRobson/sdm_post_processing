@@ -1,0 +1,52 @@
+{
+    "one_line_parameters": {
+        "eutra": [
+            "accessStratumRelease",
+            "ue-Category",
+            "ue-CategoryDL-r12",
+            "ue-CategoryUL-r12",
+            "ue-CategoryDL-v1260",
+            "ue-CategoryDL-v1330",
+            "en-DC-r15",
+            "extendedMaxMeasId-r12",
+            "ue-TxAntennaSelectionSupported",
+            "enhancedDualLayerTDD-r9",
+            "otdoa-UE-Assisted-r10",
+            "maxLayersMIMO-Indication-r12",
+            "loggedMeasurementsIdle-r10",
+            "skipFallbackCombinations-r13",
+            "diffFallbackCombReport-r14"
+        ],
+        "utra": [
+            "losslessSRNS-RelocationSupport",
+            "supportForRfc2507",
+            "accessStratumReleaseIndicator"
+        ],
+        "geran-cs": [],
+        "eutra-nr": [],
+        "nr" : []
+    },
+    "multiple_line_paremeters": {
+        "eutra": [
+            "son-Parameters-r9",
+            "neighCellSI-AcquisitionParameters-r9",
+            "wlan-IW-Parameters-v1310",
+            "interRAT-ParametersWLAN-r13",
+            "lwip-Parameters-r13",
+            "supportedROHC-Profiles"
+        ],
+        "utra": [
+            "pdcp-Capability",
+            "rlc-Capability",
+            "edch-PhysicalLayerCategory",
+            "hsdsch-physical-layer-category-ext",
+            "hsdsch-physical-layer-category-ext2",
+            "enhancedFdpch",
+            "discontinuousDpcchTransmission",
+            "slotFormat4"
+        ],
+        "geran-cs": [],
+        "eutra-nr": [],
+        "nr" : []
+    }
+}
