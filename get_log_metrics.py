@@ -176,7 +176,7 @@ def main():
   print('log folders: {}'.format(log_files))
 
   for file in log_files:
-    parsed_log = get_metrics_log_from_sdm_file(file)
+    parsed_log = get_metrics_log_from_sdm_file(file, True)
 
     #get_mcs(parsed_log)
     get_lte_ca_state(parsed_log)

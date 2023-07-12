@@ -149,11 +149,12 @@ class LassenParser:
     
     return output_file
 
-  def parse_log_signalling_txt_maclinux(self, log_path, concatenate_logs=True, output=True):
+  def parse_log_signalling_txt_maclinux(self, log_path, concatenate_logs=True, output=None):
     """Parse log file function for mac/linux."""
-    for file in Path(log_path).parent.iterdir():
-      if 'directory_parsed' in file.name:
-        return file
+    if not output:
+      for file in Path(log_path).parent.iterdir():
+        if 'directory_parsed' in file.name:
+          return file
     self.modify_file_for_mac_os_unidm(log_path)
     log_files = []
     for file in Path(log_path).parent.iterdir():
@@ -161,7 +162,10 @@ class LassenParser:
         if 'sbuff_power_on_log' not in str(file.name):
           log_files.append(file)
 
-    output_file = str(str(Path(file.parent) / 'directory_parsed.txt'))
+    if not output:
+      output_file = str(str(Path(file.parent) / 'directory_parsed.txt'))
+    else:
+      output_file = output
     # print(output_file)
     with open(output_file, "w") as output_text_file:
       output_text_file.write('Parsed log file of {}\n\n'.format(str(log_path)))
@@ -354,6 +358,19 @@ class LassenParser:
 
       current_line += 1
 
+  def get_infoexport(self, log_file):
+    """return the infoexport metadata from a log file"""
+    log.info(log_file.parent)
+    tmp_log_directory = rename_folder_before_parsing(log_file.parent)
+    for file in tmp_log_directory.iterdir():
+      log.info(file)
+      if log_file.name in file.name:
+        log_file = file
+        break
+    command = str(self.dm_console_location) + ' infoexport ' + str(log_file)
+    response = subprocess.run(command.split(), capture_output=True)
+    log.info(response)
+    return response
 
 '''
 def get_individual_signaling_log_object_csv_lassen(parsed_csv):
@@ -503,7 +520,7 @@ def get_signaling_log_list_from_csv_lassen(log_path):
   pass
 
 
-def get_signalling_log_from_sdm_file(log_file):
+def get_signalling_log_from_sdm_file(log_file, concatenate_logs=True, output=None):
   """
   Input a Path object of a unique sdm file. Output a .txt file of the capinfo.
 
@@ -515,7 +532,9 @@ def get_signalling_log_from_sdm_file(log_file):
     log.info('Log is pixellogger')
     parsed_log = lassen_parser.parse_log_signalling_txt_pixellogger(log_file.parent)
   else:
-    parsed_log = lassen_parser.parse_log_signalling_txt(log_file)
+    log.info('concatenate logs: ' + str(concatenate_logs))
+    log.info('output directory: ' + str(output))
+    parsed_log = lassen_parser.parse_log_signalling_txt(log_file, concatenate_logs, output)
 
   log_lines = []
   with open(parsed_log, 'r', encoding='utf-8') as parsed_log_file:
@@ -532,8 +551,11 @@ def get_metrics_log_from_sdm_file(log_file, overwrite):
     log.info('Log is pixellogger')
   else:
     log.info('Logs exist, and overwriting logs is: {}'.format(str(overwrite)))
-    parsed_log = lassen_parser.parse_log_metrics_txt_maclinux(log_file, overwrite=overwrite)
-  
+    if platform != 'win32':
+      parsed_log = lassen_parser.parse_log_metrics_txt_maclinux(log_file, overwrite=overwrite)
+    else:
+      pass
+      #TODO(@scottrobson) create function to get the metrics using a windows device
   log_lines = []
   with open(parsed_log, 'r', encoding='utf-8') as parsed_log_file:
     for line in parsed_log_file:
